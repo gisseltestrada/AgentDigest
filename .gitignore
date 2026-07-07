@@ -1,0 +1,10 @@
+# OS
+.DS_Store
+
+# Env files that may hold secrets (ANTHROPIC_API_KEY, DB creds, etc.)
+.env
+.env.*
+!.env.example
+
+# k8s local secrets (never commit real values)
+/k8s/secret.yaml
