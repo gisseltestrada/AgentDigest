@@ -18,4 +18,5 @@ model Source {
   createdAt DateTime @default(now())
   url       String?
   title     String?
+  content   String?
 }

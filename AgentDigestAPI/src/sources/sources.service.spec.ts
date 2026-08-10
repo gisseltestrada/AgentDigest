@@ -25,9 +25,16 @@ describe('SourcesService', () => {
   });
 
   it('creates a source', async () => {
-    prisma.source.create.mockResolvedValue({ id: 1, title: 'Test source', url: 'https://example.com' });
+    prisma.source.create.mockResolvedValue({
+      id: 1,
+      title: 'Test source',
+      url: 'https://example.com',
+    });
 
-    const result = await service.create({ title: 'Test source', url: 'https://example.com' });
+    const result = await service.create({
+      title: 'Test source',
+      url: 'https://example.com',
+    });
 
     expect(result.title).toBe('Test source');
     expect(prisma.source.create).toHaveBeenCalledWith({

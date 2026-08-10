@@ -30,7 +30,10 @@ export class SourcesController {
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() body: { title?: string; url?: string }) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: { title?: string; url?: string },
+  ) {
     return this.sourcesService.update(id, body);
   }
 

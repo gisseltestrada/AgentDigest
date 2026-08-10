@@ -10,7 +10,12 @@ import { SourcesService } from './sources/sources.service';
 
 @Module({
   imports: [PrismaModule],
-  controllers: [AppController, HealthController, SourcesController, ChatController],
+  controllers: [
+    AppController,
+    HealthController,
+    SourcesController,
+    ChatController,
+  ],
   providers: [AppService, SourcesService, ChatService],
 })
 export class AppModule {}
