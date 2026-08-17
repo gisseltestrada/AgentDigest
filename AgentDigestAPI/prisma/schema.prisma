@@ -4,13 +4,15 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider     = "prisma-client"
-  output       = "../generated/prisma"
-  moduleFormat = "cjs"
+  provider        = "prisma-client"
+  output          = "../generated/prisma"
+  moduleFormat    = "cjs"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider   = "postgresql"
+  extensions = [vector]
 }
 
 model Source {
@@ -19,4 +21,16 @@ model Source {
   url       String?
   title     String?
   content   String?
+  chunks    Chunk[]
+}
+
+model Chunk {
+  id        Int                      @id @default(autoincrement())
+  createdAt DateTime                 @default(now())
+  content   String
+  embedding Unsupported("vector(768)")
+  source    Source                   @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  sourceId  Int
+
+  @@index([sourceId])
 }
