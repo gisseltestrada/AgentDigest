@@ -1,10 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SourcesService } from './sources.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { IngestionService } from '../ingestion/ingestion.service';
 
 describe('SourcesService', () => {
   let service: SourcesService;
   let prisma: any;
+  let ingestion: any;
 
   beforeEach(async () => {
     prisma = {
@@ -16,9 +18,14 @@ describe('SourcesService', () => {
         delete: jest.fn(),
       },
     };
+    ingestion = { ingest: jest.fn().mockResolvedValue(undefined) };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [SourcesService, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        SourcesService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: IngestionService, useValue: ingestion },
+      ],
     }).compile();
 
     service = module.get<SourcesService>(SourcesService);
@@ -28,17 +35,22 @@ describe('SourcesService', () => {
     prisma.source.create.mockResolvedValue({
       id: 1,
       title: 'Test source',
-      url: 'https://example.com',
+      content: 'Some article content',
     });
 
     const result = await service.create({
       title: 'Test source',
-      url: 'https://example.com',
+      content: 'Some article content',
     });
 
     expect(result.title).toBe('Test source');
     expect(prisma.source.create).toHaveBeenCalledWith({
-      data: { title: 'Test source', url: 'https://example.com' },
+      data: {
+        title: 'Test source',
+        url: undefined,
+        content: 'Some article content',
+      },
     });
+    expect(ingestion.ingest).toHaveBeenCalledWith(1, 'Some article content');
   });
 });

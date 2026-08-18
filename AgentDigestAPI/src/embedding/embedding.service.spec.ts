@@ -42,8 +42,9 @@ describe('EmbeddingService', () => {
     ]);
     expect(embedContentMock).toHaveBeenCalledTimes(1);
     expect(embedContentMock).toHaveBeenCalledWith({
-      model: 'text-embedding-004',
+      model: 'gemini-embedding-001',
       contents: ['chunk one', 'chunk two'],
+      config: { outputDimensionality: 768 },
     });
   });
 

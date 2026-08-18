@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { GoogleGenAI } from '@google/genai';
 
-const EMBEDDING_MODEL = 'text-embedding-004';
+const EMBEDDING_MODEL = 'gemini-embedding-001';
+const EMBEDDING_DIMENSIONS = 768;
 
 @Injectable()
 export class EmbeddingService {
@@ -15,6 +16,7 @@ export class EmbeddingService {
     const response = await this.ai.models.embedContent({
       model: EMBEDDING_MODEL,
       contents: texts,
+      config: { outputDimensionality: EMBEDDING_DIMENSIONS },
     });
 
     return (response.embeddings ?? []).map((embedding) => embedding.values ?? []);

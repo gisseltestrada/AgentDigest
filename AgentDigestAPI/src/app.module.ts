@@ -3,7 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ChatController } from './chat/chat.controller';
 import { ChatService } from './chat/chat.service';
+import { ChunkingService } from './chunking/chunking.service';
+import { EmbeddingService } from './embedding/embedding.service';
 import { HealthController } from './health/health.controller';
+import { IngestionService } from './ingestion/ingestion.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { SourcesController } from './sources/sources.controller';
 import { SourcesService } from './sources/sources.service';
@@ -16,6 +19,13 @@ import { SourcesService } from './sources/sources.service';
     SourcesController,
     ChatController,
   ],
-  providers: [AppService, SourcesService, ChatService],
+  providers: [
+    AppService,
+    SourcesService,
+    ChatService,
+    ChunkingService,
+    EmbeddingService,
+    IngestionService,
+  ],
 })
 export class AppModule {}

@@ -1,10 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { IngestionService } from '../ingestion/ingestion.service';
 import * as cheerio from 'cheerio';
 
 @Injectable()
 export class SourcesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly ingestion: IngestionService,
+  ) {}
 
   async findAll() {
     return this.prisma.source.findMany({
@@ -26,13 +30,15 @@ export class SourcesService {
     const content = data.url
       ? await this.fetchContentFromUrl(data.url)
       : data.content || '';
-    return this.prisma.source.create({
+    const source = await this.prisma.source.create({
       data: {
         title: data.title,
         url: data.url,
         content,
       },
     });
+    await this.ingestion.ingest(source.id, content);
+    return source;
   }
 
   async update(
@@ -41,16 +47,19 @@ export class SourcesService {
   ) {
     await this.findOne(id);
 
-    return this.prisma.source.update({
+    const content = data.url
+      ? await this.fetchContentFromUrl(data.url)
+      : data.content || '';
+    const source = await this.prisma.source.update({
       where: { id },
       data: {
         title: data.title,
         url: data.url,
-        content: data.url
-          ? await this.fetchContentFromUrl(data.url)
-          : data.content || '',
+        content,
       },
     });
+    await this.ingestion.ingest(source.id, content);
+    return source;
   }
 
   async remove(id: number) {
