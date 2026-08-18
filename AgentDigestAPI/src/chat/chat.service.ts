@@ -3,7 +3,10 @@ import { GoogleGenAI } from '@google/genai';
 import { PrismaService } from '../prisma/prisma.service';
 import { EmbeddingService } from '../embedding/embedding.service';
 
-const CHAT_MODEL = 'gemini-flash-latest';
+// Pinned rather than the "-latest" alias: that alias has been returning
+// sustained 503 UNAVAILABLE ("high demand") for this API key/project,
+// while this pinned version responds normally.
+const CHAT_MODEL = 'gemini-3.6-flash';
 const TOP_K = 5;
 // Cosine distance ranges 0 (identical) to 2 (opposite); chunks farther than
 // this are treated as irrelevant rather than force-fed into the prompt.

@@ -83,7 +83,7 @@ describe('ChatService', () => {
     const result = await service.sendMessage('question');
 
     expect(generateContentMock).toHaveBeenCalledWith({
-      model: 'gemini-flash-latest',
+      model: 'gemini-3.6-flash',
       contents: 'question',
     });
     expect(result.citations).toEqual([]);
