@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { marked } from 'marked';
@@ -113,12 +113,15 @@ export class App {
           this.sourceNotice.set(`Added "${source.title || 'Untitled'}".`);
           this.loadSources();
         },
-        error: () => {
+        error: (err: HttpErrorResponse) => {
           this.creating.set(false);
+          const serverMessage =
+            typeof err.error?.message === 'string' ? err.error.message : null;
           this.sourceError.set(
-            mode === 'url'
-              ? "Couldn't fetch that URL. Check it's reachable and try again."
-              : "Couldn't add that source. Try again.",
+            serverMessage ??
+              (mode === 'url'
+                ? "Couldn't fetch that URL. Check it's reachable and try again."
+                : "Couldn't add that source. Try again."),
           );
         },
       });
