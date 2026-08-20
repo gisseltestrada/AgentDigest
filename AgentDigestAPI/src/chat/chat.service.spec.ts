@@ -75,17 +75,19 @@ describe('ChatService', () => {
     expect(result.citations).toEqual([{ sourceId: 1, title: 'Doc', url: null }]);
   });
 
-  it('falls back to a plain prompt when there are no chunks in the library', async () => {
+  it('instructs the model to refuse rather than answer from general knowledge when nothing matches', async () => {
     embedding.embedText.mockResolvedValue([[0.1, 0.2]]);
     prisma.$queryRaw.mockResolvedValue([]);
-    generateContentMock.mockResolvedValue({ text: 'I have no sources yet.' });
+    generateContentMock.mockResolvedValue({
+      text: "I don't have any saved sources covering that.",
+    });
 
     const result = await service.sendMessage('question');
 
-    expect(generateContentMock).toHaveBeenCalledWith({
-      model: 'gemini-3.6-flash',
-      contents: 'question',
-    });
+    const call = generateContentMock.mock.calls[0][0];
+    expect(call.model).toBe('gemini-3.6-flash');
+    expect(call.contents).toContain('do not answer from your own general knowledge');
+    expect(call.contents).toContain('question');
     expect(result.citations).toEqual([]);
   });
 });

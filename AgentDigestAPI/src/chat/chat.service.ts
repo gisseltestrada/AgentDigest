@@ -76,7 +76,11 @@ export class ChatService {
 
   private buildPrompt(message: string, chunks: RetrievedChunk[]): string {
     if (chunks.length === 0) {
-      return message;
+      return (
+        `No saved source is relevant to this question. Tell the user you ` +
+        `don't have any saved sources covering this — do not answer from ` +
+        `your own general knowledge.\n\nQuestion: ${message}`
+      );
     }
 
     const context = chunks
