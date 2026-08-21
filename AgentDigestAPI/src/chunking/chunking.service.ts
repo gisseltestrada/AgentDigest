@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-const DEFAULT_CHUNK_SIZE = 1000;
-const DEFAULT_OVERLAP = 200;
+// limit context to 6000 char 
+const DEFAULT_CHUNK_SIZE = 6000;
+const DEFAULT_OVERLAP = 1200;
 
 @Injectable()
 export class ChunkingService {

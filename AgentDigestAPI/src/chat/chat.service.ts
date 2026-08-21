@@ -74,6 +74,7 @@ export class ChatService {
     `;
   }
 
+  // can use chunks to print for debugging
   private buildPrompt(message: string, chunks: RetrievedChunk[]): string {
     if (chunks.length === 0) {
       return (
