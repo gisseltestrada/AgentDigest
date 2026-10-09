@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { IngestionService } from '../ingestion/ingestion.service';
 import * as cheerio from 'cheerio';
+import { TranscriptService } from 'src/transcript/transcript.service';
 
 // Below this, extracted text is almost certainly a bot-check/interstitial
 // page rather than real article content (some sites intermittently serve
@@ -21,7 +22,8 @@ export class SourcesService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly ingestion: IngestionService,
-  ) {}
+    private readonly transcript: TranscriptService,
+  ) { }
 
   async findAll() {
     return this.prisma.source.findMany({
@@ -40,9 +42,19 @@ export class SourcesService {
   }
 
   async create(data: { title?: string; url?: string; content?: string }) {
-    const content = data.url
-      ? await this.fetchContentFromUrl(data.url)
-      : data.content || '';
+    const isYoutubeUrl = await this.transcript.isYoutubeUrl(data.url || '');
+    console.log('isYoutubeUrl:', isYoutubeUrl);
+
+    let content;
+    if (isYoutubeUrl) {
+      content = await this.transcript.downloadTranscript(data.url || '');
+    } else {
+      content = data.url
+        ? await this.fetchContentFromUrl(data.url)
+        : data.content || '';
+    }
+
+
     const source = await this.prisma.source.create({
       data: {
         title: data.title,
@@ -112,8 +124,8 @@ export class SourcesService {
 
     throw new BadRequestException(
       'The page returned unexpectedly little content after multiple ' +
-        `attempts (got ${lastExtracted.length} chars) — it may be ` +
-        'blocking automated requests. Try again in a moment.',
+      `attempts (got ${lastExtracted.length} chars) — it may be ` +
+      'blocking automated requests. Try again in a moment.',
     );
   }
 }

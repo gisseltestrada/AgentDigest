@@ -10,6 +10,7 @@ import { IngestionService } from './ingestion/ingestion.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { SourcesController } from './sources/sources.controller';
 import { SourcesService } from './sources/sources.service';
+import { TranscriptService } from './transcript/transcript.service';
 
 @Module({
   imports: [PrismaModule],
@@ -26,6 +27,7 @@ import { SourcesService } from './sources/sources.service';
     ChunkingService,
     EmbeddingService,
     IngestionService,
+    TranscriptService,
   ],
 })
 export class AppModule {}
