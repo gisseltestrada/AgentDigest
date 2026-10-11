@@ -87,7 +87,7 @@ export class App {
     const mode = this.addMode();
 
     if (mode === 'url' && !url) {
-      this.sourceError.set('Enter a URL to fetch.');
+      this.sourceError.set('Enter a webpage or YouTube URL.');
       return;
     }
     if (mode === 'text' && !content) {
@@ -120,7 +120,7 @@ export class App {
           this.sourceError.set(
             serverMessage ??
               (mode === 'url'
-                ? "Couldn't fetch that URL. Check it's reachable and try again."
+                ? "Couldn't fetch that URL or video. Check it's reachable and try again."
                 : "Couldn't add that source. Try again."),
           );
         },

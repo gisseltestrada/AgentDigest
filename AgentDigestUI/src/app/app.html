@@ -46,16 +46,19 @@
 
         @if (addMode() === 'url') {
           <div class="field">
-            <label for="source-url">Article URL</label>
+            <label for="source-url">Article or YouTube URL</label>
             <input
               type="url"
               id="source-url"
               name="url"
-              placeholder="https://example.com/article"
+              placeholder="https://example.com/article or https://youtube.com/watch?v=..."
               [ngModel]="newUrl()"
               (ngModelChange)="newUrl.set($event)"
             />
-            <p class="hint">We'll fetch the page and extract its text automatically.</p>
+            <p class="hint">
+              Paste a webpage link and we'll extract its article text, or a YouTube video
+              link and we'll pull its transcript — automatically.
+            </p>
           </div>
         } @else {
           <div class="field">
@@ -128,7 +131,7 @@
       </ul>
     </section>
 
-    <section class="panel" aria-labelledby="ask-heading">
+    <section class="panel panel-ask" aria-labelledby="ask-heading">
       <h2 id="ask-heading">Ask a question</h2>
       <p class="panel-subtitle">Answers are grounded in your saved sources, with citations.</p>
 
